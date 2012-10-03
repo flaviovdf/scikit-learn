@@ -169,10 +169,9 @@ class KNeighborsClassifier(NeighborsBase, KNeighborsMixin,
         # Translate class label to a column index in probabilities array.
         # This may not be needed provided classes labels are guaranteed to be
         # np.arange(n_classes) (e.g. consecutive and starting with 0)
-        pred_indices = pred_labels.copy()
-        for k, c in enumerate(self._classes):
-            pred_indices[pred_labels == c] = k
-
+        _, pred_indices = np.unique(pred_labels, return_inverse=True)
+        pred_indices = pred_indices.reshape(pred_labels.shape)
+    
         # a simple ':' index doesn't work right
         all_rows = np.arange(X.shape[0])
 
@@ -183,7 +182,6 @@ class KNeighborsClassifier(NeighborsBase, KNeighborsMixin,
         probabilities = (probabilities.T / probabilities.sum(axis=1)).T
 
         return probabilities
-
 
 class RadiusNeighborsClassifier(NeighborsBase, RadiusNeighborsMixin,
                                 SupervisedIntegerMixin, ClassifierMixin):

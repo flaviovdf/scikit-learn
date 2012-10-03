@@ -210,6 +210,29 @@ def test_kneighbors_classifier_predict_proba():
     assert_array_equal(real_prob, y_prob)
 
 
+def test_predict_proba_float_target():
+    '''
+    Tests KNeighborsClassifier.predict_proba() after fitting a float target
+    array
+    '''
+    X = np.array([[0, 2, 0],
+                  [0, 2, 1],
+                  [2, 0, 0],
+                  [2, 2, 0],
+                  [0, 0, 2],
+                  [0, 0, 1]])
+    y = np.array([4, 4, 5, 5, 1, 1], dtype='f')
+    cls = neighbors.KNeighborsClassifier(n_neighbors=3, p=1)
+    cls.fit(X, y)
+    y_prob = cls.predict_proba(X)
+    real_prob = np.array([[0, 2. / 3, 1. / 3],
+                          [1. / 3, 2. / 3, 0],
+                          [1. / 3, 0, 2. / 3],
+                          [0, 1. / 3, 2. / 3],
+                          [2. / 3, 1. / 3, 0],
+                          [2. / 3, 1. / 3, 0]])
+    assert_array_equal(real_prob, y_prob)
+
 def test_radius_neighbors_classifier(n_samples=40,
                                      n_features=5,
                                      n_test_pts=10,
